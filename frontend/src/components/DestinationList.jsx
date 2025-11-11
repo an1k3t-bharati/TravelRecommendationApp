@@ -1,31 +1,19 @@
 import React from "react";
 import Location from "./Location";
-import Slider from "react-slick";
-
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 const DestinationList = ({ destinations }) => {
-  var settings = {
-    dots: true,
-    infinite: destinations.length > 3,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 2 } },
-      { breakpoint: 600, settings: { slidesToShow: 1 } },
-    ],
-  };
-
-  if (!Array.isArray(destinations) || destinations.length === 0) {
-    return null;
+  if (!destinations || destinations.length === 0) {
+    return (
+      <div className="text-center text-gray-500">
+        <p>No destinations found. Try adjusting your search filters!</p>
+      </div>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {destinations.map((item, index) => (
-        <Location key={index} item={item} />
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {destinations.map((destination) => (
+        <Location key={destination.destination_name} item={destination} />
       ))}
     </div>
   );

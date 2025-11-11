@@ -1,120 +1,125 @@
-import React, { useState } from "react";
+import React from "react";
 
-const FilterSection = ({ onSearch }) => {
-  const [weather, setWeather] = useState("");
-  const [locationType, setLocationType] = useState("");
-  const [budget, setBudget] = useState(1000);
-  const [transport, setTransport] = useState("");
-  const [duration, setDuration] = useState(7);
-
+const FilterSection = ({
+  weather,
+  setWeather,
+  locationType,
+  setLocationType,
+  transport,
+  setTransport,
+  maxBudget,
+  setMaxBudget,
+  duration,
+  setDuration,
+  onSearch,
+}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    onSearch({
-      weather,
-      locationType,
-      budget: Number(budget),
-      transport,
-      duration: Number(duration),
-    });
+    console.log("FilterSection: Form submitted! Calling onSearch...");
+    onSearch();
   };
 
   return (
-    <div className="bg-base-100 dark:bg-slate-900 dark:text-white shadow-lg rounded-2xl p-6 max-w-4xl mx-auto mt-[-50px] relative z-10 border dark:border-slate-700">
-      <h2 className="text-xl font-semibold mb-4 text-center">
+    <div className="container mx-auto p-8 bg-gray-800 rounded-lg shadow-xl -mt-16 relative z-10">
+      <h3 className="text-2xl font-bold text-white mb-6 text-center">
         Find Your Perfect Destination
-      </h2>
+      </h3>
+
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end"
+        className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6"
       >
-        <div>
-          <label className="block text-sm font-medium mb-1">Weather</label>
-          <select
-            value={weather}
-            onChange={(e) => setWeather(e.target.value)}
-            className="w-full border rounded-lg p-2 input input-bordered dark:bg-slate-800" // Added input-bordered
-          >
-            <option value="">Any</option>
-            <option value="sunny">Sunny</option>
-            <option value="warm">Warm</option>
-            <option value="cold">Cold</option>
-            <option value="snowy">Snowy</option>
-            <option value="mild">Mild</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            🏞️ Location Type
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text text-white">Weather</span>
           </label>
           <select
+            className="select select-bordered"
+            value={weather}
+            onChange={(e) => setWeather(e.target.value)}
+          >
+            <option>Any</option>
+            <option>Warm</option>
+            <option>Cold</option>
+            <option>Temperate</option>
+          </select>
+        </div>
+
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text text-white">Location Type</span>
+          </label>
+          <select
+            className="select select-bordered"
             value={locationType}
             onChange={(e) => setLocationType(e.target.value)}
-            className="w-full border rounded-lg p-2 input input-bordered dark:bg-slate-800"
           >
-            <option value="">Any</option>
-            <option value="beach">Beach</option>
-            <option value="mountain">Mountain</option>
-            <option value="city">City</option>
-            <option value="countryside">Countryside</option>
-            <option value="historical">Historical</option>
+            <option>Any</option>
+            <option>Beach</option>
+            <option>City</option>
+            <option>Mountains</option>
+            <option>Countryside</option>
           </select>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1">✈️ Transport</label>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text text-white">Transport</span>
+          </label>
           <select
+            className="select select-bordered"
             value={transport}
             onChange={(e) => setTransport(e.target.value)}
-            className="w-full border rounded-lg p-2 input input-bordered dark:bg-slate-800"
           >
-            <option value="">Any</option>
-            <option value="plane">Plane</option>
-            <option value="bus">Bus</option>
-            <option value="train">Train</option>
-            <option value="car">Car</option>
+            <option>Any</option>
+            <option>Public Transport</option>
+            <option>Rental Car</option>
+            <option>Walking</option>
           </select>
         </div>
 
-        {/* Budget Input */}
-        <div className="md:col-span-1">
-          <label className="block text-sm font-medium mb-1">
-            Max Budget ($)
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text text-white">Max Budget ($)</span>
           </label>
           <input
             type="number"
-            value={budget}
-            min="100" // Optional: Set a minimum budget
-            step="50" // Optional: Set step increment
-            onChange={(e) => setBudget(e.target.value)}
-            className="w-full border rounded-lg p-2 input input-bordered dark:bg-slate-800"
             placeholder="e.g., 1000"
+            className="input input-bordered"
+            value={maxBudget}
+            onChange={(e) => setMaxBudget(Number(e.target.value))}
+            min="100"
+            step="50"
           />
         </div>
 
-        {/* Duration Slider */}
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium mb-1">
-            Duration ({duration} days)
+        <div className="form-control md:col-span-3 lg:col-span-2">
+          <label className="label">
+            <span className="label-text text-white">
+              Duration ({duration} days)
+            </span>
           </label>
           <input
             type="range"
             min="1"
             max="21"
+            className="range range-primary"
             value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            className="w-full range range-primary"
+            onChange={(e) => setDuration(Number(e.target.value))}
+            step="1"
           />
-          <div className="w-full flex justify-between text-xs px-2">
+          <div className="w-full flex justify-between text-xs px-2 text-white">
             <span>1 day</span>
             <span>21 days</span>
           </div>
         </div>
 
-        {/* Submit Button */}
-        <div className="md:col-span-3 mt-4 text-center">
-          <button type="submit" className="btn btn-primary px-8">
+        <div className="form-control md:col-span-3 lg:col-span-3 lg:col-start-2">
+          <button
+            type="submit"
+            className="btn btn-primary btn-block text-lg mt-6"
+          >
             Find Destinations
           </button>
         </div>
