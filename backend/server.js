@@ -1,10 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config(); // Loads your .env file
+require('dotenv').config(); 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
-
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');            
+const jwt = require('jsonwebtoken');       
+const User = require('./models/User');
 
 app.use(express.json()); 
 app.use(cors()); 
@@ -17,7 +20,18 @@ if (!apiKey) {
 }
 console.log("Gemini API key loaded successfully.");
 const genAI = new GoogleGenerativeAI(apiKey);
+const mongoUri = process.env.MONGO_URI;
+if (!mongoUri) {
+    console.error("FATAL ERROR: MONGO_URI is not defined.");
+    process.exit(1);
+}
 
+mongoose.connect(mongoUri)
+    .then(() => console.log("MongoDB connection established successfully."))
+    .catch(err => {
+        console.error("MongoDB connection error:", err);
+        process.exit(1);
+    });
 
 app.get('/', (req, res) => {
     res.send('Hello from the backend server!');
@@ -72,6 +86,92 @@ app.post('/api/recommend', async (req, res) => {
         console.error("Error calling Gemini API:", error);
         
         res.status(500).json({ error: "Failed to call Gemini API." });
+
+    }
+});
+
+app.post('/api/register', async (req, res) => {
+    try {
+      
+        const { email, password } = req.body;
+
+       
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Please provide email and password' });
+        }
+
+       
+        const existingUser = await User.findOne({ email: email.toLowerCase() });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Email already in use' });
+        }
+
+      
+        const newUser = new User({
+            email: email.toLowerCase(),
+            password: password
+        });
+
+        await newUser.save();
+
+       
+        res.status(201).json({ message: 'User created successfully!' });
+
+    } catch (error) {
+       
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ error: error.message });
+        }
+        console.error("Register Error:", error);
+        res.status(500).json({ error: 'Server error, please try again later.' });
+    }
+});
+
+app.post('/api/login', async (req, res) => {
+    try {
+        
+        const { email, password } = req.body;
+
+       
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Please provide email and password' });
+        }
+
+       
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+         
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+       
+        const payload = {
+            user: {
+                id: user.id 
+            }
+        };
+
+        
+        jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            { expiresIn: 3600 }, 
+            (err, token) => {
+                if (err) throw err;
+                
+                res.json({ token });
+            }
+        );
+
+    } catch (error) {
+        console.error("Login Error:", error);
+        res.status(500).json({ error: 'Server error, please try again later.' });
     }
 });
 
