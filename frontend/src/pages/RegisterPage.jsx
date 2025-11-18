@@ -5,7 +5,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 const RegisterPage = () => {
-  // 1. Add fullName state
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,12 +24,10 @@ const RegisterPage = () => {
       setError("Passwords do not match");
       return;
     }
-    // ... (other validations) ...
 
     setLoading(true);
 
     try {
-      // 2. Send fullName to the backend
       const response = await axios.post("http://localhost:3000/api/register", {
         fullName: fullName,
         email: email,
@@ -40,7 +37,6 @@ const RegisterPage = () => {
       setLoading(false);
       setSuccess(response.data.message);
 
-      // Clear form
       setFullName("");
       setEmail("");
       setPassword("");
@@ -63,7 +59,6 @@ const RegisterPage = () => {
           </h2>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* --- 3. ADDED FULL NAME FIELD --- */}
             <div>
               <label
                 htmlFor="fullName"
@@ -82,7 +77,6 @@ const RegisterPage = () => {
                 onChange={(e) => setFullName(e.target.value)}
               />
             </div>
-            {/* --- END OF NEW FIELD --- */}
 
             <div>
               <label
@@ -139,8 +133,6 @@ const RegisterPage = () => {
               />
             </div>
 
-            {/* ... (error and success messages) ... */}
-
             <div>
               <button
                 type="submit"
@@ -151,8 +143,6 @@ const RegisterPage = () => {
               </button>
             </div>
           </form>
-
-          {/* ... (link to login) ... */}
         </div>
       </main>
       <Footer />
