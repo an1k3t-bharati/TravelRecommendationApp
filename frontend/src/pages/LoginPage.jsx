@@ -40,9 +40,12 @@ const LoginPage = () => {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      <main className="flex-grow flex items-center justify-center bg-gray-100 dark:bg-gray-900 py-12">
-        <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white">
+      {/* FIX: Use bg-base-200 for theme-aware background */}
+      <main className="flex-grow flex items-center justify-center bg-base-200 py-12">
+        {/* FIX: Use bg-base-100 for the card background */}
+        <div className="w-full max-w-md p-8 space-y-6 bg-base-100 rounded-lg shadow-lg">
+          {/* FIX: Use text-base-content for theme-aware text */}
+          <h2 className="text-3xl font-bold text-center text-base-content">
             Sign in to Your Account
           </h2>
 
@@ -50,7 +53,7 @@ const LoginPage = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="block text-sm font-medium text-base-content"
               >
                 Email address
               </label>
@@ -69,7 +72,7 @@ const LoginPage = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="block text-sm font-medium text-base-content"
               >
                 Password
               </label>
@@ -118,9 +121,8 @@ const LoginPage = () => {
           </form>
 
           <div className="text-sm text-center">
-            <span className="text-gray-700 dark:text-gray-300">
-              Don't have an account?{" "}
-            </span>
+            {/* FIX: Use text-base-content for theme-aware text */}
+            <span className="text-base-content">Don't have an account? </span>
             <Link
               to="/register"
               className="font-medium text-primary hover:underline"

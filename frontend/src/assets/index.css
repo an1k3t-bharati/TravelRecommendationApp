@@ -2,6 +2,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body{
-    font-family:'Poppins', sans-serif;
+
+body {
+    font-family: 'Poppins', sans-serif;
 }
+
+
+.navbar a {
+    color: var(--_text-color, var(--fallback-bc));
+}
+
+.navbar .navbar-start,
+.navbar .navbar-center,
+.navbar .navbar-end {
+    color: var(--_text-color, var(--fallback-bc));
+}
+
+.menu li>*:not(.menu-title):hover,
+.menu li.active>*:not(.menu-title) {
+    background-color: var(--fallback-n);
+    color: var(--fallback-nc);
+}
+
+.menu li>*:not(.menu-title) {
+    color: var(--fallback-bc);
+}
+
+@keyframes pulse-slow {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.85;
+    }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+}
+

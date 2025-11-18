@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-
+import { useNavigate } from "react-router-dom"; // 1. Import useNavigate
 import Navbar from "../components/Navbar.jsx";
 import Banner from "../components/Banner.jsx";
 import FilterSection from "../components/FilterSection.jsx";
 import DestinationList from "../components/DestinationList.jsx";
 import Footer from "../components/Footer.jsx";
-import Location from "../components/Location.jsx";
-
+import banner from "../assets/Banner.jpg";
 import parisImage from "../assets/paris.jpg";
 import kyotoImage from "../assets/kyoto.jpg";
 import santoriniImage from "../assets/santorini.jpg";
 
 const trendingDestinations = [
+  // ... (your trending destinations array)
   {
     destination_name: "Paris",
     country: "France",
@@ -39,51 +38,29 @@ const trendingDestinations = [
 ];
 
 const HomePage = () => {
-  const [destinations, setDestinations] = useState([]);
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
+  // 2. REMOVED loading, error, and destinations state.
+  //    This component now *only* manages the filter state.
   const [weather, setWeather] = useState("Any");
   const [locationType, setLocationType] = useState("Any");
   const [transport, setTransport] = useState("Any");
   const [maxBudget, setMaxBudget] = useState(1000);
   const [duration, setDuration] = useState(7);
 
-  useEffect(() => {
-    setDestinations(trendingDestinations);
-  }, []);
-  const handleSearch = async () => {
-    setLoading(true);
-    setError(null);
-    setDestinations([]);
+  const navigate = useNavigate(); // 3. Initialize the navigate function
 
-    try {
-      const filterData = {
-        weather: weather,
-        locationType: locationType,
-        transport: transport,
-        maxBudget: maxBudget,
-        duration: duration,
-      };
+  // 4. NEW handleSearch function
+  const handleSearch = () => {
+    // Create a query string from the filter state
+    const queryParams = new URLSearchParams({
+      weather,
+      locationType,
+      transport,
+      maxBudget,
+      duration,
+    }).toString();
 
-      const response = await axios.post(
-        "http://localhost:3000/api/recommend",
-        filterData
-      );
-
-      const aiDestinations = response.data.map((dest) => ({
-        ...dest,
-        image_url: null,
-      }));
-
-      setDestinations(aiDestinations);
-    } catch (err) {
-      setError("Failed to get recommendations. Please try again.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    // Navigate to the results page with the query string
+    navigate(`/results?${queryParams}`);
   };
 
   return (
@@ -91,38 +68,38 @@ const HomePage = () => {
       <Navbar />
 
       <main className="flex-grow">
-        <Banner />
+        <div
+          className="relative bg-cover bg-center pt-24"
+          style={{ backgroundImage: `url(${banner})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-transparent"></div>
+          <div className="relative z-10">
+            <Banner />
+            <FilterSection
+              // Pass all state and the new search handler
+              weather={weather}
+              setWeather={setWeather}
+              locationType={locationType}
+              setLocationType={setLocationType}
+              transport={transport}
+              setTransport={setTransport}
+              maxBudget={maxBudget}
+              setMaxBudget={setMaxBudget}
+              duration={duration}
+              setDuration={setDuration}
+              onSearch={handleSearch}
+            />
+          </div>
+        </div>
 
-        <FilterSection
-          weather={weather}
-          setWeather={setWeather}
-          locationType={locationType}
-          setLocationType={setLocationType}
-          transport={transport}
-          setTransport={setTransport}
-          maxBudget={maxBudget}
-          setMaxBudget={setMaxBudget}
-          duration={duration}
-          setDuration={setDuration}
-          onSearch={handleSearch}
-        />
-
-        <div className="container mx-auto px-4 py-8">
-          {loading && (
-            <div className="text-center">
-              <p>Loading AI recommendations...</p>
-            </div>
-          )}
-
-          {error && (
-            <div className="text-center text-red-500">
-              <p>{error}</p>
-            </div>
-          )}
-
-          {!loading && !error && (
-            <DestinationList destinations={destinations} />
-          )}
+        {/* 5. This list now *only* shows trending destinations */}
+        <div className="bg-base-100 py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-base-content mb-12">
+              Trending Destinations
+            </h2>
+            <DestinationList destinations={trendingDestinations} />
+          </div>
         </div>
       </main>
 
