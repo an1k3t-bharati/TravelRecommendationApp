@@ -16,8 +16,7 @@ const tripSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    // --- FIX: Changed from Number to String ---
-    // This allows both numbers (1000) and text ("High")
+    
     estimated_budget: {
         type: String, 
     },

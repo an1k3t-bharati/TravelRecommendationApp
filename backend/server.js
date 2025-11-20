@@ -11,9 +11,11 @@ const User = require('./models/User');
 const Trip = require('./models/Trip'); 
 const auth = require('./middleware/auth'); 
 const axios = require('axios'); 
+const researchRoutes = require("./researchRoutes");
 
 app.use(express.json()); 
 app.use(cors()); 
+app.use("/api/research", researchRoutes);
 
 
 
