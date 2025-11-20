@@ -85,8 +85,8 @@ app.post('/api/recommend', async (req, res) => {
 
     const prompt = `
       You are an expert travel agent. A user needs 10 travel recommendations.
-      User's Preferences: * Max Budget: $${maxBudget}, * Trip Duration: ${duration} days, * Preferred Weather: ${weather}, * Location Type: ${locationType}, * Transport: ${transport}
-      Your Task: Generate 10 unique destinations. The 'estimated_budget' MUST be a number and less than or equal to $${maxBudget}.
+    The user's preferences: * Max Budget: $${maxBudget}, * Trip Duration: ${duration} days, * Preferred Weather: ${weather}, * Location Type: ${locationType}, * Transport: ${transport}
+      Your need to generate 10 unique destinations. The 'estimated_budget' MUST be a number and less than or equal to $${maxBudget}.
       Output Format:
       You MUST return your answer as a single, minified JSON array.
       Do not include any text or markdown.
